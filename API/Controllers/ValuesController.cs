@@ -13,14 +13,14 @@ namespace API.Controllers
     public class ValuesController : ControllerBase
     {
 
-        public static List<Value> List = new Value[]
+        public static List<Value> List = new List<Value>
         {
-            new Value{ Id = 1, Title = "Title1"},
-            new Value{ Id = 2, Title = "Title2"},
-            new Value{ Id = 3, Title = "Title3"},
-            new Value{ Id = 4, Title = "Title4"},
-            new Value{ Id = 5, Title = "Title5"},
-         }.ToList();
+            new Value{ Id = Guid.NewGuid() , Title = "Title1", Body = "Body1"},
+            new Value{ Id = Guid.NewGuid(), Title = "Title2", Body = "Body2"},
+            new Value{ Id = Guid.NewGuid(), Title = "Title3", Body = "Body3"},
+            new Value{ Id = Guid.NewGuid(), Title = "Title4", Body = "Body4"},
+            new Value{ Id = Guid.NewGuid(), Title = "Title5", Body = "Body5"},
+         };
 
         [HttpGet]
         public JsonResult GetAll()
@@ -30,7 +30,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public JsonResult GetOne([FromRoute] int? id)
+        public JsonResult GetOne([FromRoute] Guid id)
         {
             return new JsonResult(List.Find(p => p.Id == id));
         }
@@ -38,19 +38,20 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] Value model)
         {
+            model.Id = Guid.NewGuid();
             List.Add(model);
             return Ok(model);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete([FromRoute] int id)
+        public IActionResult Delete([FromRoute] Guid id)
         {
             List.Remove(List.Find(p => p.Id == id));
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit([FromRoute] int id, [FromBody] Value model)
+        public IActionResult Edit([FromRoute] Guid id, [FromBody] Value model)
         {
             foreach (var value in List)
             {
